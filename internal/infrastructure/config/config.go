@@ -25,10 +25,10 @@ type Config struct {
 	JWTSecret string
 
 	/*
-		AIAPIKey is the API key for the AI categorizer (TypeSafe). It is
-		read now so the key is ready in the environment, but the
-		categorizer is not wired in Bootstrap yet; TextBasedCategorizer
-		is still in use and needs no key.
+		AIAPIKey is the API key for the TypeSafe categorizer. It is read
+		so the key is ready in the environment, but TypeSafe is not
+		wired in Bootstrap; OpenAICategorizer is in use and takes its
+		key from VisionConfig.APIKey.
 	*/
 	AIAPIKey string
 
@@ -46,6 +46,7 @@ type Config struct {
 /*
 VisionConfig holds the settings for receipt scanning: the vision
 provider's API key and the largest image, in bytes, the app accepts.
+APIKey is the OpenAI key, so OpenAICategorizer uses it as well.
 */
 type VisionConfig struct {
 	APIKey      string

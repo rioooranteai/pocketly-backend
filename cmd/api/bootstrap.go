@@ -85,12 +85,15 @@ func Bootstrap(cfg *config.Config, db *gorm.DB) (*App, error) {
 	*/
 
 	/*
-		Concrete implementation of port.Categorizer.
-		Currently keyword matching, which needs no API key. Swap this
-		for an AI-backed implementation (OpenAI, TypeSafe) when one
-		should be used; TransactionUsecase will not need any changes.
+		Concrete implementation of port.Categorizer, backed by OpenAI's
+		chat completion API. It shares the OpenAI key with the vision
+		extractor. If a call fails (missing key, timeout, bad answer),
+		TransactionUsecase logs it and stores the transaction as
+		uncategorized. ai.NewTextBasedCategorizer() is a keyless
+		drop-in replacement; TransactionUsecase needs no changes either
+		way.
 	*/
-	categorizer := ai.NewTextBasedCategorizer()
+	categorizer := ai.NewOpenAICategorizer(cfg.VisionConfig.APIKey)
 
 	/*
 		Concrete implementation of port.VisionExtractor, backed by
