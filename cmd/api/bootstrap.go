@@ -4,7 +4,8 @@ import (
 	"gorm.io/gorm"
 
 	"pocketly/internal/delivery/http/handler"
-	"pocketly/internal/infrastructure/ai"
+	"pocketly/internal/infrastructure/ai/categorizer"
+	"pocketly/internal/infrastructure/ai/vision"
 	"pocketly/internal/infrastructure/auth"
 	"pocketly/internal/infrastructure/config"
 	persistence "pocketly/internal/infrastructure/persistence/gorm"
@@ -89,18 +90,18 @@ func Bootstrap(cfg *config.Config, db *gorm.DB) (*App, error) {
 		chat completion API. It shares the OpenAI key with the vision
 		extractor. If a call fails (missing key, timeout, bad answer),
 		TransactionUsecase logs it and stores the transaction as
-		uncategorized. ai.NewTextBasedCategorizer() is a keyless
+		uncategorized. categorizer.NewTextBasedCategorizer() is a keyless
 		drop-in replacement; TransactionUsecase needs no changes either
 		way.
 	*/
-	categorizer := ai.NewOpenAICategorizer(cfg.VisionConfig.APIKey)
+	categorizer := categorizer.NewOpenAICategorizer(cfg.VisionConfig.APIKey)
 
 	/*
 		Concrete implementation of port.VisionExtractor, backed by
 		OpenAI's vision-capable chat completion API. Extracts a
 		description and line items directly from a receipt image.
 	*/
-	visionExtractor := ai.NewOpenAIVisionExtractor(cfg.VisionConfig.APIKey)
+	visionExtractor := vision.NewOpenAIVisionExtractor(cfg.VisionConfig.APIKey)
 
 	/*
 		Concrete implementation of repository.TransactionRepository,

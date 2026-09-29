@@ -1,4 +1,4 @@
-package ai
+package categorizer
 
 import (
 	"context"
