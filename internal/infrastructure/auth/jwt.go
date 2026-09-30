@@ -25,7 +25,7 @@ const minSecretLength = 32
 
 /*
 NewJWTSigner builds a JWTSigner using the given secret key.
-Tokens issued by this signer are valid for 24 hours. It returns an
+Tokens issued by this signer are valid for 4 hours. It returns an
 error if the secret is empty or shorter than minSecretLength, since
 a weak secret would let anyone forge valid tokens.
 */
@@ -36,7 +36,7 @@ func NewJWTSigner(secret string) (*JWTSigner, error) {
 
 	return &JWTSigner{
 		secret: []byte(secret),
-		ttl:    12 * time.Hour,
+		ttl:    4 * time.Hour,
 	}, nil
 }
 
